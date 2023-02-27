@@ -1,0 +1,46 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Create";
+    IEnumerable<Category> categories = ViewBag.Categories;
+
+    SelectList selectList = new SelectList(categories, nameof(Category.Id), nameof(Category.Name));
+}
+<div class="row">
+    <div class="col-lg-10">
+        <h1 class="h3 mb-0 text-gray-800 mb-4">Category Create</h1>
+    </div>
+    <div class="col-lg-2">
+        <a class="btn btn-primary" asp-area="manage" asp-controller="category" asp-action="index">Go To Home</a>
+    </div>
+</div>
+
+<div>
+    <form asp-action="Create" asp-area="manage" asp-controller="category" method="post" enctype="multipart/form-data">
+        <div class="form-check ">
+            <input asp-for="IsMain" class="form-check-input">
+            <label asp-for="IsMain" class="form-check-label"></label>
+        </div>
+        <div class="mb-3 w-50">
+            <label asp-for="Name" class="form-label"></label>
+            <input id="isMain" asp-for="Name" class="form-control">
+            <span style="color : red" asp-validation-for="Name"></span>
+        </div>
+        <div>
+            <div id="fileInput" class="input-group w-50 mb-3">
+                <div class="custom-file">
+                    <input asp-for="File" class="custom-file-input" >
+                    <label asp-for="File" class="custom-file-label" accept="image/jpeg"></label>
+                    <span style="color : red" asp-validation-for="File"></span>
+                </div>
+            </div>
+        </div>
+        <div class="my-3 " id="selectInput">
+            <div class="input-group w-50 mb-3">
+                <select asp-for="ParentId" name="ParentId" class="custom-select" asp-items="selectList">
+                    <option selected>Choose...</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
