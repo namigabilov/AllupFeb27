@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using P133Allup.DataAccessLayer;
 using P133Allup.Models;
+using System.Drawing.Drawing2D;
 
 namespace P133Allup.Areas.Manage.Controllers
 {
@@ -12,27 +13,28 @@ namespace P133Allup.Areas.Manage.Controllers
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _env;
 
+
         public CategoryController(AppDbContext context, IWebHostEnvironment env)
         {
             _context = context;
             _env = env;
         }
 
-
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.Include(c=>c.Products.Where(p=>p.IsDeleted==false)).Where(c=>c.IsMain && c.IsDeleted ==false).ToListAsync());
+            return View(await _context.Categories.Include(c=>c.Products.Where(p=>p.IsDeleted==false)).Include(c=>c.Children.Where(child=>child.IsDeleted ==false)).Where(c=>c.IsMain && c.IsDeleted ==false).ToListAsync());
         }
 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Categories = await _context.Categories.Include(c => c.Products.Where(p => p.IsDeleted == false)).Where(c => c.IsMain && c.IsDeleted == false).ToListAsync();
+            ViewBag.Categories = await _context.Categories.Include(c => c.Products.Where(p => p.IsDeleted == false)).Where(c => c.IsDeleted == false).ToListAsync();
 
             return View();
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Category category)
         {
             ViewBag.Categories = await _context.Categories.Include(c => c.Products.Where(p => p.IsDeleted == false)).Where(c => c.IsMain && c.IsDeleted == false).ToListAsync();
@@ -108,6 +110,105 @@ namespace P133Allup.Areas.Manage.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return BadRequest();
+
+            Category category = await _context.Categories.Include(c=>c.Products.Where(p=>p.IsDeleted ==false))
+                .Where(c=>c.IsDeleted ==false && c.Id == id && c.IsMain).FirstOrDefaultAsync(c => c.Id == id);
+
+            if (category == null) return NotFound();
+
+            return View(category);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteCategory(int? id)
+        {
+            if(id == null) return BadRequest();
+
+            Category category = await _context.Categories.Include(c => c.Products.Where(c => c.IsDeleted == false))
+                .Where(c => c.IsDeleted == false && c.IsMain).FirstOrDefaultAsync(c => c.Id == id);
+
+            if (category == null) return NotFound();
+
+            category.IsDeleted = true;
+            category.DeletedAt = DateTime.UtcNow.AddHours(4);
+            category.DeletedBy = "System";
+
+            foreach (Product product in category.Products)
+            {
+                product.IsDeleted = true;
+                product.DeletedBy = "System";
+                product.DeletedAt = DateTime.UtcNow.AddHours(4);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Detail(int? id)
+        {
+            if (id == null) return BadRequest();
+
+            Category category = await _context.Categories.Include(c=>c.Products.Where(p=>p.IsDeleted ==false )).Where(c=>c.IsDeleted == false && c.IsMain).FirstOrDefaultAsync(c => c.Id == id);
+
+            if (category == null) return NotFound();
+
+            return View(category);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(int? id)
+        {
+            if (id == null) return BadRequest();
+
+            Category category = await _context.Categories.Where(c=>c.IsDeleted == false && c.IsMain).FirstOrDefaultAsync(c=>c.Id == id);
+
+            if (category == null) return NotFound();
+
+            ViewBag.Categories = await _context.Categories.Where(c => c.IsDeleted == false && c.IsMain).ToListAsync();
+
+            return View(category);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(int? id , Category category)
+        {
+            ViewBag.Categories = await _context.Categories.Where(c => c.IsDeleted == false && c.IsMain).ToListAsync();
+
+            if (!ModelState.IsValid)
+            {
+                return View(category);
+            }
+            if (id == null) return BadRequest();
+
+            if (id != category.Id) return BadRequest();
+
+            Category dbCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id && c.IsDeleted ==false);
+
+            if (dbCategory == null) return NotFound();
+
+            if (category.IsMain)
+            {
+                if (dbCategory.IsMain)
+                {
+                    if (category.File != null)
+                    {
+                      
+
+
+                    }
+                }
+            }
+            return View(category);
+
         }
 
     }

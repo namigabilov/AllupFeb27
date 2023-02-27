@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Index";
     var count = 0;
+    var countForChild = 0;
 }
 
 <div class="row">
@@ -35,20 +36,39 @@
                     count += 1;
                     <tr>
                         <th>@count</th>
-                        <th><img style="width:100px" src="~/assets/images/@category.Image" /></th>
+                        <th><img style="width:50px" src="~/assets/images/@category.Image" /></th>
                         <th>@category.Name</th>
                         <th>@category.CreatedBy</th>
                         <th>@category.CreatedAt?.ToString("dd-MMMM-yyyy")</th>
                         <th>@category.Products?.Count()</th>
                         <th>
-
                             <a asp-area="manage" asp-controller="Category" asp-action="detail" asp-route-id="@category.Id" class="btn btn-primary">Detail</a>
                             <a asp-area="manage" asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger">Delete</a>
                             <a asp-area="manage" asp-controller="Category" asp-action="update" asp-route-id="@category.Id" class="btn btn-warning">Update</a>
-
+                            <a asp-area="manage" asp-controller="Category" asp-action="update" asp-route-id="@category.Id" class="btn btn-primary">Show Subcategories</a>
                         </th>
+                        <div id="subCategories" class="d-none">
+                            @if (category.Children != null && category.Children.Count() > 0)
+                            {
+                                <tabe class="table table-bordered table-striped">
+                                    <tbody>
+                                        @foreach (Category categoryChild in category.Children)
+                                        {
+                                            countForChild++;
+                                            <tr>
+                                                <th>@countForChild</th>
+                                                <th>@categoryChild.Name</th>
+                                                <th>@categoryChild.CreatedBy</th>
+                                                <th>@categoryChild.CreatedAt</th>
+                                            </tr>
+                                        }
+                                        <div class="d-none">@(countForChild = 0)</div>
+                                    </tbody>
+                                </tabe>
+                            }
+                        </div>
                     </tr>
-                    
+
                 }
             </tbody>
         </table>

@@ -80,6 +80,7 @@
                                             @foreach (Category parent in Model.Categories)
                                             {
                                                 <option value="@parent.Id">@parent.Name</option>
+
                                                 if (parent.Children != null && parent.Children.Count() > 0)
                                                 {
                                                     foreach (Category child in parent.Children)

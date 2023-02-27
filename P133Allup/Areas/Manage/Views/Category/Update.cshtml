@@ -1,0 +1,49 @@
+﻿@model Category
+
+@{
+    ViewData["Title"] = "Update";
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <h1 class="h3 mb-4 text-gray-800">Category Update Page</h1>
+    </div>
+</div>
+<div class=" row">
+    <div class="col-lg-8">
+        <form method="post" enctype="multipart/form-data">
+            <div class="mb-3 form-check">
+                <input asp-for="IsMain" class="form-check-input">
+                <label asp-for="IsMain" class="form-check-label"></label>
+                <span asp-validation-for="IsMain" class="text text-danger"></span>
+            </div>
+            <div class="mb-3 w-50">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control">
+                <span asp-validation-for="Name" class="text text-danger"></span>
+            </div>
+            <div>
+                <div id="fileInput" class="input-group w-50 mb-3">
+                    <div class="custom-file">
+                        <input asp-for="File" class="custom-file-input">
+                        <label asp-for="File" class="custom-file-label" accept="image/jpeg"></label>
+                        <span style="color : red" asp-validation-for="File"></span>
+                    </div>
+                </div>
+            </div>
+            <div id="selectInput">
+                <div class="input-group w-50 mb-3">
+                    <select asp-for="ParentId" class="custom-select" asp-items="new SelectList(ViewBag.Categories,nameof(Category.Id), nameof(Category.Name),Model.ParentId)">
+                       
+                    </select>
+                    <span asp-validation-for="ParentId" class="text text-danger"></span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+@*@section Scripts{
+    @await Html.PartialAsync("_Validation")
+}*@

@@ -1,14 +1,14 @@
-﻿@model Brand
+﻿@model Category
 @{
     ViewData["Title"] = "Detail";
 }
 
 <div class="row">
     <div class="col-lg-8">
-        <h1 class="h3 mb-0 text-gray-800 mb-4"> Brands Detail</h1>
+        <h1 class="h3 mb-0 text-gray-800 mb-4"> Category Detail</h1>
     </div>
     <div class="col-lg-4">
-        <a class="btn btn-primary" asp-area="manage" asp-controller="brand" asp-action="index">Go To Home</a>
+        <a class="btn btn-primary" asp-area="manage" asp-controller="category" asp-action="index">Go To Home</a>
     </div>
 </div>
 <div class="row my-3">
@@ -17,8 +17,9 @@
 
         <div class="card" style="width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title"><strong>Brand Name</strong> : @Model.Name</h5>
-                <p class="card-text"><strong>Total Product Count </strong> : @Model.Products.Count()</p>
+                <img style="width : 100px" src="~/assets/images/@Model.Image" />
+                <h5 class="card-title "><strong>Category Name</strong> : @Model.Name</h5>
+                <p class="card-text "><strong>Total Product Count </strong> : @Model.Products.Count()</p>
             </div>
         </div>
 
@@ -47,9 +48,9 @@
                         <th>@product.CreatedAt?.ToString("dd-MMMM-yyyy")</th>
                         <th>
 
-                            <a asp-area="manage" asp-controller="brand" asp-action="detail" class="btn btn-primary">Detail</a>
-                            <a asp-area="manage" asp-controller="brand" asp-action="Delete" class="btn btn-danger">Delete</a>
-                            <a asp-area="manage" asp-controller="brand" asp-action="update" class="btn btn-warning">Update</a>
+                            <a asp-area="manage" asp-controller="brand" asp-action="detail"  class="btn btn-primary">Detail</a>
+                            <a asp-area="manage" asp-controller="brand" asp-action="Delete"  class="btn btn-danger">Delete</a>
+                            <a asp-area="manage" asp-controller="brand" asp-action="update"  class="btn btn-warning">Update</a>
 
                         </th>
                     </tr>
