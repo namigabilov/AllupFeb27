@@ -1,4 +1,4 @@
-﻿@model Brand
+﻿@model Product
 @{
     ViewData["Title"] = "Delete";
 }
@@ -8,10 +8,10 @@
         <h1 class="h3 mb-0 text-gray-800 mb-4">Brands Delete</h1>
     </div>
     <div class="col-lg-4">
-        <a class="btn btn-primary" asp-area="manage" asp-controller="brand" asp-action="index">Go To Home</a>
+        <a class="btn btn-primary" asp-area="manage" asp-controller="category" asp-action="index">Go To Home</a>
     </div>
     <div class="col-lg-4">
-        <a class="btn btn-danger" asp-area="manage" asp-controller="brand" asp-action="DeleteBrand" asp-route-id=@Model.Id >Delete</a>
+        <a class="btn btn-danger" asp-area="manage" asp-controller="Product" asp-action="DeleteProduct" asp-route-id=@Model.Id>Delete</a>
     </div>
 </div>
 <div class="row my-3">
@@ -20,8 +20,8 @@
 
         <div class="card" style="width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title"><strong>Brand Name</strong> : @Model.Name</h5>
-                <p class="card-text"><strong>Total Product Count </strong> : @Model.Products.Count()</p>
+                <img style="width : 80px" src="~/assets/images/product/@Model.HoverImage" />
+                <h5 class="card-title"><strong>Category Name</strong> : @Model.Title</h5>
             </div>
         </div>
 
@@ -41,16 +41,15 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (Product product in Model.Products)
-                {
                     <tr>
-                        <th>@product.Title</th>
-                        <th>@product.CreatedBy</th>
-                        <th>@product.CreatedAt?.ToString("dd-MMMM-yyyy")</th>
+                        <th>@Model.Title</th>
+                        <th>@Model.CreatedBy</th>
+                        <th>@Model.CreatedAt?.ToString("dd-MMMM-yyyy")</th>
                     </tr>
-                }
             </tbody>
         </table>
 
     </div>
 </div>
+
+

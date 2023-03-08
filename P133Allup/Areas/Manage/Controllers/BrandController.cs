@@ -26,11 +26,13 @@ namespace P133Allup.Areas.Manage.Controllers
 
             return View(brands);
         }
+
         [HttpGet]
         public IActionResult Create() 
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Create(Brand brand) 
         {
@@ -69,7 +71,7 @@ namespace P133Allup.Areas.Manage.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(int? id , Brand brand)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 return View(brand);
             }

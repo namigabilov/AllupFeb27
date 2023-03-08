@@ -2,7 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using P133Allup.DataAccessLayer;
+using P133Allup.Extentions;
+using P133Allup.Helpers;
 using P133Allup.Models;
+using P133Allup.ViewModels;
 using System.Drawing.Drawing2D;
 
 namespace P133Allup.Areas.Manage.Controllers
@@ -20,9 +23,13 @@ namespace P133Allup.Areas.Manage.Controllers
             _env = env;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageindex = 1)
         {
-            return View(await _context.Categories.Include(c=>c.Products.Where(p=>p.IsDeleted==false)).Include(c=>c.Children.Where(child=>child.IsDeleted ==false)).Where(c=>c.IsMain && c.IsDeleted ==false).ToListAsync());
+            IQueryable<Category> categories = _context.Categories
+                .Include(c => c.Products)
+                .Where(c => c.IsDeleted == false && c.IsMain);
+
+            return View(PageNatedList<Category>.Create(categories, pageindex, 5));
         }
 
         [HttpGet]
@@ -66,7 +73,7 @@ namespace P133Allup.Areas.Manage.Controllers
                     ModelState.AddModelError("File", "File Novu Duzgun Deyil !!");
                     return View();
                 }
-                if ((category.File.Length / 1024) > 300)
+                if ((category.File.Length / 1024) > 3000)
                 {
                     ModelState.AddModelError("File", "File Olcusu Max 300 Kb ola biler !");
                     return View();
@@ -183,7 +190,7 @@ namespace P133Allup.Areas.Manage.Controllers
         {
             ViewBag.Categories = await _context.Categories.Where(c => c.IsDeleted == false && c.IsMain).ToListAsync();
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 return View(category);
             }
@@ -201,15 +208,83 @@ namespace P133Allup.Areas.Manage.Controllers
                 {
                     if (category.File != null)
                     {
-                      
+                        if (category.File.CheckFileContentType("image/jpeg"))
+                        {
+                            ModelState.AddModelError("File", "Fayl Tipi Duz Deyil");
+                            return View(category);
+                        }
 
+                        if (category.File.CheckFileLength(300))
+                        {
+                            ModelState.AddModelError("File", "Fayl Olcusu Maksimum 30 kb Ola Biler");
+                            return View(category);
+                        }
+
+                        FileHelper.DeleteFile(dbCategory.Image, _env, "assets", "images");
+
+                        dbCategory.Image = await category.File.CraeteFileAsync(_env, "assets", "images");
 
                     }
                 }
+                else
+                {
+                    if (category.File == null)
+                    {
+                        ModelState.AddModelError("File", "Sekil Mecburidi");
+                        return View(category);
+                    }
+
+                    if (category.File.CheckFileContentType("image/jpeg"))
+                    {
+                        ModelState.AddModelError("File", "Fayl Tipi Duz Deyil");
+                        return View(category);
+                    }
+
+                    if (category.File.CheckFileLength(300))
+                    {
+                        ModelState.AddModelError("File", "Fayl Olcusu Maksimum 30 kb Ola Biler");
+                        return View(category);
+                    }
+
+                    dbCategory.Image = await category.File.CraeteFileAsync(_env, "assets", "images");
+                }
+
+                dbCategory.ParentId = null;
             }
-            return View(category);
+            else
+            {
+                if (category.ParentId == null)
+                {
+                    ModelState.AddModelError("ParentId", "Ust Categorya Mutleq Secilmelidi");
+                    return View(category);
+                }
 
+                if (!await _context.Categories.AnyAsync(c => c.IsDeleted == false && c.IsMain && c.Id == category.ParentId))
+                {
+                    ModelState.AddModelError("ParentId", "Duzgun Ust Categorya Sec");
+                    return View(category);
+                }
+
+                if (dbCategory.Id == category.ParentId)
+                {
+                    ModelState.AddModelError("ParentId", "Eyni Ola Bilmez");
+                    return View(category);
+                }
+                FileHelper.DeleteFile(dbCategory.Image, _env, "assets", "images");
+
+                dbCategory.Image = null;
+                dbCategory.ParentId = category.ParentId;
+            }
+
+
+            dbCategory.Name = category.Name.Trim();
+            dbCategory.IsMain = category.IsMain;
+            dbCategory.UpdatedBy = "System";
+            dbCategory.UpdatedAt = DateTime.UtcNow.AddHours(4);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
-
     }
 }

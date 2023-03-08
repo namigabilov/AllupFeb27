@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace P133Allup.Models
 {
@@ -8,5 +9,8 @@ namespace P133Allup.Models
         public string Name { get; set; }
 
         public IEnumerable<Product>? Products { get; set; }
+
+        [NotMapped]
+        public IEnumerable<Category> Categories { get; set; }
     }
 }

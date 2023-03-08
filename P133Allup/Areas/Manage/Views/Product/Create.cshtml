@@ -1,0 +1,50 @@
+﻿@model Product
+@{
+    ViewData["Title"] = "Create";
+    IEnumerable<Category> categories = ViewBag.Categories;
+    IEnumerable<Brand> brands = ViewBag.Brands;
+    
+}
+
+<div class="row">
+    <div class="col-lg-10">
+        <h1 class="h3 mb-0 text-gray-800 mb-4">Create Product</h1>
+    </div>
+
+</div>
+
+<div>
+    <form asp-action="Create" asp-area="manage" asp-controller="product" method="post">
+        <div class="mb-3 w-50">
+            <label asp-for="Title" class="form-label"></label>
+            <input asp-for="Title" class="form-control">
+            <span style="color : red" asp-validation-for="Title"></span>
+        </div>
+        <div class="my-3 " id="selectInputBrand">
+            <div class="my-3 " id="selectInput">
+                <div class="input-group w-50 mb-3">
+                    <select asp-for="Brand" name="Brand" class="custom-select">
+                        <option selected>Choose Brand...</option>
+                        @foreach (Brand brand in brands)
+                        {
+                            <option value="@brand.Id" >@brand.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="my-3 " id="selectInputCategory">
+                <div class="input-group w-50 mb-3">
+                    <select asp-for="Category" name="Category" class="custom-select">
+                        <option selected>Choose Category...</option>
+                        @foreach (Category category in categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
