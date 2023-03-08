@@ -5,7 +5,7 @@
 
 <div class="row">
     <div class="col-lg-10">
-        <h1 class="h3 mb-0 text-gray-800 mb-4">Create Product</h1>
+        <h1 class="h3 mb-0 text-gray-800 mb-4">Update Product</h1>
     </div>
 
 </div>
@@ -20,7 +20,6 @@
         <div class="my-3 " id="selectInput">
             <div class="input-group w-50 mb-3">
                 <select asp-for="Brand" name="Brand" asp-items="new SelectList(ViewBag.Brands ,nameof(Brand.Id),nameof(Brand.Name))" class="custom-select">
-                   
                 </select>
             </div>
         </div>
@@ -33,7 +32,7 @@
         </div>
 
         <div class="input-group w-50 mb-3">
-            <select asp-for="TagIds" name="ParentId" class="custom-select" asp-items="new SelectList(ViewBag.Tags,nameof(Tag.Id),nameof(Tag.Name))">
+            <select asp-for="TagIds" name="ParentId" class="custom-select" asp-items="new SelectList(ViewBag.Tags,nameof(Tag.Id),nameof(Tag.Name) , Model.TagIds)">
             </select>
         </div>
         <div class="mb-3 w-50">

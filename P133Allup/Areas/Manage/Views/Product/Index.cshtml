@@ -39,7 +39,7 @@
 
                             <a asp-area="manage" asp-controller="Product" asp-action="detail" asp-route-id="@product.Id" class="btn btn-primary">Detail</a>
                             <a asp-area="manage" asp-controller="Product" asp-action="delete" asp-route-id="@product.Id" class="btn btn-danger">Delete</a>
-                            <a @*asp-area="manage" asp-controller="brand" asp-action="update" asp-route-id="@brand.Id"*@ class="btn btn-warning">Update</a>
+                            <a asp-area="manage" asp-controller="Product" asp-action="update" asp-route-id="@product.Id" class="btn btn-warning">Update</a>
 
                         </th>
                     </tr>
@@ -54,7 +54,7 @@
                 {
                     <li class="page-item">
                         <a class="page-link"
-                       asp-controller="category" asp-action="index" asp-area="manage" asp-route-pageIndex="@(Model.PageIndex-1)">Previous</a>
+                       asp-controller="product" asp-action="index" asp-area="manage" asp-route-pageIndex="@(Model.PageIndex-1)">Previous</a>
                     </li>
                 }
 
@@ -62,7 +62,7 @@
                 {
                     <li class="page-item @(Model.PageIndex == i ? "active":"")">
                         <a class="page-link"
-                       asp-controller="category" asp-action="index" asp-area="manage" asp-route-pageIndex="@i">@i</a>
+                       asp-controller="product" asp-action="index" asp-area="manage" asp-route-pageIndex="@i">@i</a>
                     </li>
                 }
 
@@ -70,7 +70,7 @@
                 {
                     <li class="page-item">
                         <a class="page-link"
-                       asp-controller="category" asp-action="index" asp-area="manage" asp-route-pageIndex="@(Model.PageIndex+1)">Next</a>
+                       asp-controller="product" asp-action="index" asp-area="manage" asp-route-pageIndex="@(Model.PageIndex+1)">Next</a>
                     </li>
                 }
             </ul>
