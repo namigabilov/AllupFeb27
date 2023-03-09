@@ -5,8 +5,6 @@
         <div class="header-nav">
             <div class="container-fluid custom-container">
                 <div class="header-nav-wrapper d-flex justify-content-between">
-                    @*@await Html.PartialAsync("")*@
-                    @*<partial name="_TestPartial"></partial>*@
                     <div class="header-static-nav">
                         <p>@Html.Raw(Model.Settings.FirstOrDefault(s=>s.Key == "Slogan").Value)</p>
                     </div>
@@ -21,7 +19,8 @@
                                     <ul class="dropdown-menu" aria-labelledby="setting">
                                         <li><a href="my-account.html">My account</a></li>
                                         <li><a href="checkout.html">Checkout</a></li>
-                                        <li><a href="login.html">Sign in</a></li>
+                                        <li><a asp-controller="Acconut" asp-action="Login" >Log in</a></li>
+                                        <li><a asp-controller="Acconut" asp-action="Register">Register </a></li>
                                     </ul>
                                 </div>
                             </li>
@@ -102,9 +101,6 @@
                             <div class="header-cart">
                                 @await Html.PartialAsync("_BasketPartial",Model.BasketVMs)
                             </div
-                            <div class = "mx-2">
-                                <a asp-area="manage" asp-action="index" asp-controller="dashboard" class="btn btn-warning">Admin Panel</a>
-                            </div>
                         </div> <!-- header search cart -->
                     </div>
                 </div> <!-- row -->

@@ -1,15 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using P133Allup.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace P133Allup.DataAccessLayer
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-                
-        }
-
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Slider> Sliders { get; set; }
         public DbSet<Category> Categories { get; set; }
